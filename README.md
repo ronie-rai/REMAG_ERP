@@ -1,7 +1,16 @@
 # Remag_ERP
+ERP Solutioin
 
-Enterprise Resource Planning (ERP) application.
 
-## Getting Started
+Start the tunnel 
+cloudflared tunnel run erp
 
-Detailed instructions for setup and running the project will be added here.
+Start frontend 
+cd frontend
+npm run build (if needed)
+serve -s .\dist -l 5173
+
+
+Start Backend
+cd backend
+npm run dev
