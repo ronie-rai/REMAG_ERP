@@ -29,7 +29,7 @@ router.get('/logs', requireAuth, async (req, res) => {
     }
 
     const result = await request.query(`
-      SELECT TOP (@limit)
+      SELECT
         id,
         created_at,
         user_id,
@@ -44,6 +44,7 @@ router.get('/logs', requireAuth, async (req, res) => {
       FROM audit_logs
       ${where}
       ORDER BY created_at DESC
+      LIMIT ${limit}
     `);
 
     const logs = (result.recordset || []).map((row) => {

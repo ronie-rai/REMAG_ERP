@@ -15,18 +15,12 @@ const getMaxJobNumber = async () => {
     SELECT MAX(max_job) AS max_job
     FROM (
       SELECT MAX(
-        TRY_CONVERT(INT, CASE
-          WHEN LEFT(CONVERT(VARCHAR(50), job_number), 3) = 'JOB' THEN SUBSTRING(CONVERT(VARCHAR(50), job_number), 4, 50)
-          ELSE CONVERT(VARCHAR(50), job_number)
-        END)
+        NULLIF(REGEXP_REPLACE(job_number::TEXT, '[^0-9]', '', 'g'), '')::INT
       ) AS max_job
       FROM job_entries
       UNION ALL
       SELECT MAX(
-        TRY_CONVERT(INT, CASE
-          WHEN LEFT(CONVERT(VARCHAR(50), job_number), 3) = 'JOB' THEN SUBSTRING(CONVERT(VARCHAR(50), job_number), 4, 50)
-          ELSE CONVERT(VARCHAR(50), job_number)
-        END)
+        NULLIF(REGEXP_REPLACE(job_number::TEXT, '[^0-9]', '', 'g'), '')::INT
       ) AS max_job
       FROM job_sheets
     ) t
@@ -41,6 +35,7 @@ const getMaxJobNumber = async () => {
   
   return maxJob + 1;
 };
+
 
 // Get Next Job Number
 router.get('/job-entries/next-job-number', async (req, res) => {
@@ -390,19 +385,19 @@ router.get('/job-entries/:id/status-history', async (req, res) => {
         SELECT
           created_at,
           username,
-          JSON_VALUE(details_json, '$.body.status') AS status,
-          JSON_VALUE(details_json, '$.body.status_remarks') AS status_remarks
+          (details_json::json->'body'->>'status') AS status,
+          (details_json::json->'body'->>'status_remarks') AS status_remarks
         FROM audit_logs
         WHERE module = 'production'
           AND entity_id = @entity_id
           AND (
-            path LIKE '%/job-entries/' + CONVERT(VARCHAR(20), @entity_id) + '/status%'
-            OR path LIKE '%/job-entries/' + CONVERT(VARCHAR(20), @entity_id) + '/status-remarks%'
+            path LIKE '%/job-entries/' || @entity_id::text || '/status%'
+            OR path LIKE '%/job-entries/' || @entity_id::text || '/status-remarks%'
           )
           AND (method = 'PUT' OR method = 'PATCH')
           AND (
-            JSON_VALUE(details_json, '$.body.status') IS NOT NULL
-            OR JSON_VALUE(details_json, '$.body.status_remarks') IS NOT NULL
+            (details_json::json->'body'->>'status') IS NOT NULL
+            OR (details_json::json->'body'->>'status_remarks') IS NOT NULL
           )
         ORDER BY created_at DESC
       `);

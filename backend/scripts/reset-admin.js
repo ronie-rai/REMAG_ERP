@@ -1,28 +1,21 @@
 import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import sql, { getConnection, closeConnection } from '../config/database.js';
 
 dotenv.config();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const ensureUsersSchema = async (pool) => {
-  await pool.request().query(`
-    IF COL_LENGTH('dbo.users', 'permissions_json') IS NULL
-    BEGIN
-      ALTER TABLE users ADD permissions_json NVARCHAR(MAX) NULL;
-    END
-  `);
-
-  await pool.request().query(`
-    IF COL_LENGTH('dbo.users', 'created_at') IS NULL
-    BEGIN
-      ALTER TABLE users ADD created_at DATETIME NULL;
-    END
-
-    IF COL_LENGTH('dbo.users', 'updated_at') IS NULL
-    BEGIN
-      ALTER TABLE users ADD updated_at DATETIME NULL;
-    END
-  `);
+  const schemaPath = path.join(__dirname, 'create-tables-pg.sql');
+  const schemaSql = fs.readFileSync(schemaPath, 'utf8');
+  console.log('Initializing PostgreSQL database schema in reset-admin script...');
+  await pool.query(schemaSql);
+  console.log('Schema initialized successfully.');
 };
 
 const run = async () => {

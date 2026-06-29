@@ -1,3 +1,33 @@
+/* =====================================================
+   REMAG ELECTROS — Global CSS
+   ===================================================== */
+
+/* CSS Custom Properties — Remag Brand Theme */
+:root {
+  --re-teal: #20B2C8;
+  --re-teal-light: #3ECDE3;
+  --re-teal-dark: #178AA0;
+  --re-dark: #1A1A2E;
+  --re-charcoal: #16213E;
+  --re-mid: #0F3460;
+  --re-white: #F8FAFB;
+  --re-off-white: #EEF2F7;
+  --re-gold: #E8A838;
+  --re-gold-light: #F4C563;
+  --re-text: #2D3748;
+  --re-text-muted: #718096;
+  --re-border: rgba(32, 178, 200, 0.2);
+  --re-glass: rgba(255, 255, 255, 0.05);
+  --re-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  --re-radius: 16px;
+  --re-radius-sm: 8px;
+  --re-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Fonts */
+  --font-heading: 'Outfit', 'Inter', sans-serif;
+  --font-body: 'Inter', 'Outfit', sans-serif;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,16 +35,13 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--re-text);
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
-

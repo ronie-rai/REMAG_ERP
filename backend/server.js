@@ -1,6 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { getConnection } from './config/database.js';
 import sql from './config/database.js';
 import bcrypt from 'bcryptjs';
@@ -19,6 +22,9 @@ import auditRoutes from './routes/audit.js';
 import { ensureAuditLogsSchema } from './utils/audit.js';
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 8001;
@@ -967,6 +973,15 @@ app.use((err, req, res, next) => {
   res.status(status).json({ error: err.message || 'Internal server error' });
 });
 
+const ensureDatabaseSchema = async () => {
+  const pool = await getConnection();
+  const schemaPath = path.join(__dirname, 'scripts', 'create-tables-pg.sql');
+  const schemaSql = fs.readFileSync(schemaPath, 'utf8');
+  console.log('Initializing PostgreSQL database schema...');
+  await pool.query(schemaSql);
+  console.log('PostgreSQL database schema initialized successfully.');
+};
+
 // Start server
 const startServer = async () => {
   try {
@@ -974,21 +989,7 @@ const startServer = async () => {
     await getConnection();
     console.log('Database connected successfully');
 
-    await ensureUsersSchema();
-    await ensureBillsSchema();
-    await ensurePaymentsSchema();
-    await ensureJobEntriesSchema();
-    await ensureSalesInvoicesSchema();
-    await ensureSalesPaymentsSchema();
-    await ensureGRNsSchema();
-    await ensureVendorsSchema();
-    await ensureJobSheetsSchema();
-    await ensureIndentsSchema();
-    await ensureTestReportsSchema();
-    await ensureACMotorDataSheetsSchema();
-    await ensureDCMotorDataSheetsSchema();
-    await ensureMachiningSchema();
-    await ensureAuditLogsSchema();
+    await ensureDatabaseSchema();
     await ensureDefaultUser();
     
     app.listen(PORT, () => {

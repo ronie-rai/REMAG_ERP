@@ -59,24 +59,63 @@ import IndentApprovals from './pages/procurement/IndentApprovals'
 import UserManagement from './pages/admin/UserManagement'
 import ErrorBoundary from './components/ErrorBoundary'
 import { authStorage, session } from './services/api'
+import PublicHome from './pages/public/PublicHome'
+import PublicAbout from './pages/public/PublicAbout'
+import PublicServices from './pages/public/PublicServices'
+import PublicContact from './pages/public/PublicContact'
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: '#20B2C8',
+      light: '#3ECDE3',
+      dark: '#178AA0',
+      contrastText: '#ffffff',
     },
     secondary: {
-      main: '#dc004e',
+      main: '#E8A838',
+      light: '#F4C563',
+      dark: '#d4892e',
+      contrastText: '#ffffff',
+    },
+    background: {
+      default: '#F8FAFB',
     },
   },
   typography: {
     fontSize: 12,
+    fontFamily: "'Inter', 'Outfit', sans-serif",
   },
   components: {
     MuiTextField: {
       defaultProps: {
         InputLabelProps: {
           shrink: true,
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+          textTransform: 'none',
+          fontWeight: 600,
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          background: 'linear-gradient(135deg, #1A1A2E, #16213E)',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.3)',
+        },
+      },
+    },
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          background: 'linear-gradient(180deg, #16213E 0%, #0F3460 100%)',
+          color: '#ffffff',
         },
       },
     },
@@ -112,7 +151,7 @@ function App() {
     <ErrorBoundary>
       <Layout>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
 
           <Route
             path="/sales/enquiries"
@@ -375,7 +414,7 @@ function App() {
           />
 
           <Route path="/admin/users" element={<UserManagement />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </Layout>
     </ErrorBoundary>
@@ -384,10 +423,19 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <SessionWatcher />
         <Routes>
+          <Route path="/" element={<PublicHome />} />
+          <Route path="/home" element={<Navigate to="/" replace />} />
+          <Route path="/about-us" element={<PublicAbout />} />
+          <Route path="/our-services" element={<PublicServices />} />
+          <Route path="/contact-us" element={<PublicContact />} />
+
+          {/* ── Auth Routes ── */}
           <Route path="/login" element={<Login />} />
+
+          {/* ── Protected ERP Routes ── */}
           <Route
             path="/*"
             element={

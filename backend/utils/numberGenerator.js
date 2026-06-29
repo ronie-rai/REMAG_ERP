@@ -5,9 +5,9 @@ export const generateEnquiryNo = async () => {
   const pool = await getConnection();
   
   const result = await pool.request()
-    .query(`SELECT TOP 1 enquiry_no FROM enquiries 
+    .query(`SELECT enquiry_no FROM enquiries 
             WHERE enquiry_no LIKE 'ENQ${year}%' 
-            ORDER BY id DESC`);
+            ORDER BY id DESC LIMIT 1`);
   
   let newNum = 1;
   if (result.recordset.length > 0) {
@@ -24,9 +24,9 @@ export const generateSalesQuotationNo = async () => {
   const pool = await getConnection();
 
   const result = await pool.request()
-    .query(`SELECT TOP 1 quotation_no FROM sales_quotations
+    .query(`SELECT quotation_no FROM sales_quotations
             WHERE quotation_no LIKE 'QUO${year}%'
-            ORDER BY id DESC`);
+            ORDER BY id DESC LIMIT 1`);
 
   let newNum = 1;
   if (result.recordset.length > 0) {
@@ -43,9 +43,9 @@ export const generateJobNumber = async () => {
   const pool = await getConnection();
   
   const result = await pool.request()
-    .query(`SELECT TOP 1 job_number FROM job_sheets 
+    .query(`SELECT job_number FROM job_sheets 
             WHERE job_number LIKE 'JOB${year}%' 
-            ORDER BY id DESC`);
+            ORDER BY id DESC LIMIT 1`);
   
   let newNum = 1;
   if (result.recordset.length > 0) {
@@ -62,9 +62,9 @@ export const generateIndentNumber = async () => {
   const pool = await getConnection();
   
   const result = await pool.request()
-    .query(`SELECT TOP 1 indent_number FROM indents 
+    .query(`SELECT indent_number FROM indents 
             WHERE indent_number LIKE 'IND${year}%' 
-            ORDER BY id DESC`);
+            ORDER BY id DESC LIMIT 1`);
   
   let newNum = 1;
   if (result.recordset.length > 0) {
@@ -81,9 +81,9 @@ export const generatePONumber = async () => {
   const pool = await getConnection();
   
   const result = await pool.request()
-    .query(`SELECT TOP 1 po_number FROM purchase_orders 
+    .query(`SELECT po_number FROM purchase_orders 
             WHERE po_number LIKE 'PO${year}%' 
-            ORDER BY id DESC`);
+            ORDER BY id DESC LIMIT 1`);
   
   let newNum = 1;
   if (result.recordset.length > 0) {
@@ -109,9 +109,9 @@ export const generateBillNumber = async () => {
   const pool = await getConnection();
   
   const result = await pool.request()
-    .query(`SELECT TOP 1 bill_number FROM bills 
+    .query(`SELECT bill_number FROM bills 
             WHERE bill_number LIKE 'BILL${year}%' 
-            ORDER BY id DESC`);
+            ORDER BY id DESC LIMIT 1`);
   
   let newNum = 1;
   if (result.recordset.length > 0) {
@@ -128,9 +128,9 @@ export const generateInvoiceNumber = async () => {
   const pool = await getConnection();
 
   const result = await pool.request().query(`
-    SELECT TOP 1 invoice_no FROM sales_invoices
+    SELECT invoice_no FROM sales_invoices
     WHERE invoice_no LIKE 'INV${year}%'
-    ORDER BY id DESC
+    ORDER BY id DESC LIMIT 1
   `);
 
   let newNum = 1;

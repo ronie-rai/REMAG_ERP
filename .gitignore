@@ -43,3 +43,7 @@ frontend/build/
 *.db
 *.sqlite
 
+# Scratch / Temp
+scratch/
+
+

@@ -60,7 +60,7 @@ router.post('/indents', async (req, res) => {
     const completeIndent = await pool.request()
       .input('id', sql.Int, indentResult.recordset[0].id)
       .query(`SELECT i.*, 
-              (SELECT * FROM indent_items WHERE indent_id = i.id FOR JSON PATH) as items
+              COALESCE((SELECT json_agg(row_to_json(t)) FROM (SELECT * FROM indent_items WHERE indent_id = i.id) t), '[]'::json) as items
               FROM indents i WHERE i.id = @id`);
     
     res.json(indentResult.recordset[0]);
@@ -1554,12 +1554,12 @@ router.get('/purchase-orders', async (req, res) => {
           SUM(ISNULL(poi.quantity, 0)) AS total_ordered_qty,
           ISNULL(rec.total_received_qty, 0) AS total_received_qty
         FROM purchase_order_items poi
-        OUTER APPLY (
-          SELECT SUM(ISNULL(gi.quantity, 0)) AS total_received_qty
+        LEFT JOIN LATERAL (
+          SELECT SUM(COALESCE(gi.quantity, 0)) AS total_received_qty
           FROM grns g
           INNER JOIN grn_items gi ON gi.grn_id = g.id
           WHERE g.po_id = poi.po_id
-        ) rec
+        ) rec ON TRUE
         GROUP BY poi.po_id, rec.total_received_qty
       ) x ON x.po_id = po.id
       ORDER BY po.id DESC
@@ -1586,16 +1586,21 @@ router.get('/grns/po/:po_id', async (req, res) => {
         SELECT
           g.*,
           po.po_number,
-          (
-            SELECT
-              gi.sku_id,
-              s.sku_code,
-              s.item_name,
-              gi.quantity
-            FROM grn_items gi
-            LEFT JOIN store_skus s ON s.id = gi.sku_id
-            WHERE gi.grn_id = g.id
-            FOR JSON PATH
+          COALESCE(
+            (
+              SELECT json_agg(row_to_json(t))
+              FROM (
+                SELECT
+                  gi.sku_id,
+                  s.sku_code,
+                  s.item_name,
+                  gi.quantity
+                FROM grn_items gi
+                LEFT JOIN store_skus s ON s.id = gi.sku_id
+                WHERE gi.grn_id = g.id
+              ) t
+            ),
+            '[]'::json
           ) AS items
         FROM grns g
         LEFT JOIN purchase_orders po ON po.id = g.po_id

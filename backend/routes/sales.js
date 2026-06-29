@@ -177,7 +177,7 @@ router.get('/enquiries/:id/timeline', async (req, res) => {
           AND (
             (a.entity_id = @enquiry_id AND a.path LIKE '%/sales/enquiries%')
             OR (q.enquiry_id = @enquiry_id)
-            OR (a.path LIKE '%/sales/quotations%' AND a.details_json LIKE '%"enquiry_id":' + CAST(@enquiry_id AS NVARCHAR(20)) + '%')
+            OR (a.path LIKE '%/sales/quotations%' AND a.details_json LIKE '%"enquiry_id":' || @enquiry_id::text || '%')
           )
         ORDER BY a.created_at ASC
       `);
@@ -1106,11 +1106,8 @@ router.get('/billing/invoices', async (req, res) => {
   try {
     const pool = await getConnection();
 
-    const paymentsTable = await pool.request().query("SELECT OBJECT_ID('dbo.sales_payments', 'U') AS oid");
-    const hasPayments = Boolean(paymentsTable.recordset?.[0]?.oid);
-
-    const query = hasPayments
-      ? `
+    // In PostgreSQL sales_payments always exists (created by schema)
+    const query = `
         SELECT
           i.*,
           agg.job_numbers,
@@ -1118,37 +1115,19 @@ router.get('/billing/invoices', async (req, res) => {
           COALESCE(p.paid_amount, 0) as paid_amount,
           (i.total_amount - COALESCE(p.paid_amount, 0)) as balance_amount
         FROM sales_invoices i
-        OUTER APPLY (
+        LEFT JOIN LATERAL (
           SELECT
-            STRING_AGG(CONVERT(VARCHAR(50), je.job_number), ', ') AS job_numbers,
+            STRING_AGG(je.job_number::text, ', ') AS job_numbers,
             MAX(je.party_name) AS party_name_from_jobs
           FROM sales_invoice_jobs sij
           LEFT JOIN job_entries je ON je.id = sij.job_entry_id
           WHERE sij.invoice_id = i.id
-        ) agg
+        ) agg ON TRUE
         LEFT JOIN (
           SELECT invoice_id, SUM(amount) as paid_amount
           FROM sales_payments
           GROUP BY invoice_id
         ) p ON p.invoice_id = i.id
-        ORDER BY i.id DESC
-      `
-      : `
-        SELECT
-          i.*,
-          agg.job_numbers,
-          COALESCE(i.bill_to_name, agg.party_name_from_jobs) AS party_name,
-          CAST(0 AS DECIMAL(18,2)) as paid_amount,
-          i.total_amount as balance_amount
-        FROM sales_invoices i
-        OUTER APPLY (
-          SELECT
-            STRING_AGG(CONVERT(VARCHAR(50), je.job_number), ', ') AS job_numbers,
-            MAX(je.party_name) AS party_name_from_jobs
-          FROM sales_invoice_jobs sij
-          LEFT JOIN job_entries je ON je.id = sij.job_entry_id
-          WHERE sij.invoice_id = i.id
-        ) agg
         ORDER BY i.id DESC
       `;
 
@@ -1177,14 +1156,14 @@ router.get('/billing/invoices/:id', async (req, res) => {
           agg.job_numbers,
           COALESCE(i.bill_to_name, agg.party_name_from_jobs) AS party_name
         FROM sales_invoices i
-        OUTER APPLY (
+        LEFT JOIN LATERAL (
           SELECT
-            STRING_AGG(CONVERT(VARCHAR(50), je.job_number), ', ') AS job_numbers,
+            STRING_AGG(je.job_number::text, ', ') AS job_numbers,
             MAX(je.party_name) AS party_name_from_jobs
           FROM sales_invoice_jobs sij
           LEFT JOIN job_entries je ON je.id = sij.job_entry_id
           WHERE sij.invoice_id = i.id
-        ) agg
+        ) agg ON TRUE
         WHERE i.id = @id
       `);
 
@@ -1289,14 +1268,14 @@ router.get('/billing/invoices/:id/pdf', async (req, res) => {
           agg.job_numbers,
           COALESCE(i.bill_to_name, agg.party_name_from_jobs) AS party_name
         FROM sales_invoices i
-        OUTER APPLY (
+        LEFT JOIN LATERAL (
           SELECT
-            STRING_AGG(CONVERT(VARCHAR(50), je.job_number), ', ') AS job_numbers,
+            STRING_AGG(je.job_number::text, ', ') AS job_numbers,
             MAX(je.party_name) AS party_name_from_jobs
           FROM sales_invoice_jobs sij
           LEFT JOIN job_entries je ON je.id = sij.job_entry_id
           WHERE sij.invoice_id = i.id
-        ) agg
+        ) agg ON TRUE
         WHERE i.id = @id
       `);
 

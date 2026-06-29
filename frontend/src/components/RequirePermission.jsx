@@ -30,7 +30,7 @@ function RequirePermission({ moduleKey, pageKey, action = 'view', children }) {
   const ok = useMemo(() => canPage(user, moduleKey, pageKey, action), [user, moduleKey, pageKey, action])
 
   if (!ok) {
-    return <Navigate to="/" replace state={{ from: location.pathname }} />
+    return <Navigate to="/dashboard" replace state={{ from: location.pathname }} />
   }
 
   return children

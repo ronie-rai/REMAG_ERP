@@ -40,18 +40,20 @@ router.get('/machining', async (req, res) => {
         fb.bill_date AS final_bill_date,
         fb.bill_value AS final_bill_value
       FROM machining m
-      OUTER APPLY (
-        SELECT TOP 1 *
+      LEFT JOIN LATERAL (
+        SELECT *
         FROM bills
         WHERE reference_type = 'machining' AND reference_id = m.id AND bill_stage = 'advance'
         ORDER BY id DESC
-      ) ab
-      OUTER APPLY (
-        SELECT TOP 1 *
+        LIMIT 1
+      ) ab ON TRUE
+      LEFT JOIN LATERAL (
+        SELECT *
         FROM bills
         WHERE reference_type = 'machining' AND reference_id = m.id AND bill_stage = 'final'
         ORDER BY id DESC
-      ) fb
+        LIMIT 1
+      ) fb ON TRUE
       ORDER BY m.id DESC
     `);
     res.json(result.recordset);
@@ -388,18 +390,20 @@ router.get('/machining/:id', async (req, res) => {
           fb.id AS final_bill_id,
           fb.bill_number AS final_bill_number
         FROM machining m
-        OUTER APPLY (
-          SELECT TOP 1 *
+        LEFT JOIN LATERAL (
+          SELECT *
           FROM bills
           WHERE reference_type = 'machining' AND reference_id = m.id AND bill_stage = 'advance'
           ORDER BY id DESC
-        ) ab
-        OUTER APPLY (
-          SELECT TOP 1 *
+          LIMIT 1
+        ) ab ON TRUE
+        LEFT JOIN LATERAL (
+          SELECT *
           FROM bills
           WHERE reference_type = 'machining' AND reference_id = m.id AND bill_stage = 'final'
           ORDER BY id DESC
-        ) fb
+          LIMIT 1
+        ) fb ON TRUE
         WHERE m.id = @id
       `);
 

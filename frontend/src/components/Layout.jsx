@@ -35,7 +35,7 @@ import { auditAPI, authStorage } from '../services/api'
 const drawerWidth = 240
 
 const menuItems = [
-  { text: 'DASHBOARD', icon: <DashboardIcon />, path: '/' },
+  { text: 'DASHBOARD', icon: <DashboardIcon />, path: '/dashboard' },
   {
     text: 'SALES & CRM',
     icon: <BusinessIcon />,
@@ -243,7 +243,7 @@ function Layout({ children }) {
 
   const handleLogout = () => {
     authStorage.clear()
-    navigate('/login', { replace: true })
+    navigate('/', { replace: true })
   }
 
   const handleLogsToggle = () => {

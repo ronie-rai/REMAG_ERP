@@ -9,22 +9,25 @@
     "dev": "nodemon server.js",
     "init-db": "node scripts/init-db.js"
   },
-  "keywords": ["erp", "express", "sql-server"],
+  "keywords": [
+    "erp",
+    "express",
+    "sql-server"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2",
-    "mssql": "^10.0.1",
-    "dotenv": "^16.3.1",
-    "cors": "^2.8.5",
     "bcryptjs": "^2.4.3",
-    "pdfkit": "^0.14.0",
+    "cors": "^2.8.5",
     "date-fns": "^2.30.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
     "express-validator": "^7.0.1",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "pdfkit": "^0.14.0",
+    "pg": "^8.22.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
   }
 }
-

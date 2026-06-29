@@ -507,10 +507,10 @@ router.post('/issues/:id/return', async (req, res) => {
           .input('sku_id', sql.Int, it.sku_id)
           .query(`
             SELECT
-              ISNULL(issued.issued_qty, 0) - ISNULL(ret.returned_qty, 0) AS outstanding_qty
+              COALESCE(issued.issued_qty, 0) - COALESCE(ret.returned_qty, 0) AS outstanding_qty
             FROM (SELECT SUM(qty) AS issued_qty FROM store_stock_ledger WHERE ref_type='ISSUE' AND ref_id=@ref_id AND sku_id=@sku_id AND txn_type='ISSUE_OUT') issued
-            OUTER APPLY (SELECT SUM(qty) AS returned_qty FROM store_stock_ledger WHERE ref_type='ISSUE' AND ref_id=@ref_id AND sku_id=@sku_id AND txn_type='ADJUSTMENT_IN'
-              AND (remarks LIKE 'Return from issue:%' OR remarks LIKE 'Void issue:%' OR remarks LIKE 'Adjust issue:%')) ret
+            LEFT JOIN LATERAL (SELECT SUM(qty) AS returned_qty FROM store_stock_ledger WHERE ref_type='ISSUE' AND ref_id=@ref_id AND sku_id=@sku_id AND txn_type='ADJUSTMENT_IN'
+              AND (remarks LIKE 'Return from issue:%' OR remarks LIKE 'Void issue:%' OR remarks LIKE 'Adjust issue:%')) ret ON TRUE
           `);
 
         const outstandingQty = Number(outstandingRes.recordset?.[0]?.outstanding_qty) || 0;
@@ -572,11 +572,11 @@ router.put('/issues/:id/adjust', async (req, res) => {
           .input('sku_id', sql.Int, it.sku_id)
           .query(`
             SELECT
-              ISNULL(issued.issued_qty, 0) AS issued_qty,
-              ISNULL(ret.returned_qty, 0) AS returned_qty
+              COALESCE(issued.issued_qty, 0) AS issued_qty,
+              COALESCE(ret.returned_qty, 0) AS returned_qty
             FROM (SELECT SUM(qty) AS issued_qty FROM store_stock_ledger WHERE ref_type='ISSUE' AND ref_id=@ref_id AND sku_id=@sku_id AND txn_type='ISSUE_OUT') issued
-            OUTER APPLY (SELECT SUM(qty) AS returned_qty FROM store_stock_ledger WHERE ref_type='ISSUE' AND ref_id=@ref_id AND sku_id=@sku_id AND txn_type='ADJUSTMENT_IN'
-              AND (remarks LIKE 'Return from issue:%' OR remarks LIKE 'Void issue:%' OR remarks LIKE 'Adjust issue:%')) ret
+            LEFT JOIN LATERAL (SELECT SUM(qty) AS returned_qty FROM store_stock_ledger WHERE ref_type='ISSUE' AND ref_id=@ref_id AND sku_id=@sku_id AND txn_type='ADJUSTMENT_IN'
+              AND (remarks LIKE 'Return from issue:%' OR remarks LIKE 'Void issue:%' OR remarks LIKE 'Adjust issue:%')) ret ON TRUE
           `);
 
         const currentIssued = Number(curRes.recordset?.[0]?.issued_qty) || 0;
@@ -774,8 +774,8 @@ router.get('/skus', async (req, res) => {
         FROM store_stock_ledger
         GROUP BY sku_id
       ) reserved ON reserved.sku_id = s.id
-      OUTER APPLY (
-        SELECT TOP 1
+      LEFT JOIN LATERAL (
+        SELECT
           l.rate AS latest_rate,
           l.txn_date AS latest_rate_date
         FROM store_stock_ledger l
@@ -783,7 +783,8 @@ router.get('/skus', async (req, res) => {
           AND l.rate IS NOT NULL
           AND l.txn_type IN ('IN', 'PURCHASE_IN', 'ADJUSTMENT_IN')
         ORDER BY l.txn_date DESC, l.id DESC
-      ) rate
+        LIMIT 1
+      ) rate ON TRUE
       ORDER BY s.item_name ASC
     `);
 

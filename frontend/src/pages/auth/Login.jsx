@@ -33,7 +33,7 @@ function Login() {
       const res = await authAPI.login(form)
       authStorage.setAuth({ token: res.data.token, user: res.data.user })
 
-      const to = location.state?.from || '/'
+      const to = location.state?.from || '/dashboard'
       navigate(to, { replace: true })
     } catch (error) {
       const message = error?.response?.data?.error || error?.message || 'Login failed'
