@@ -98,6 +98,23 @@ function useCountUp(target, duration = 2000, trigger) {
 export default function PublicHome() {
   const statsRef = useRef(null)
   const [statsVisible, setStatsVisible] = React.useState(false)
+  const [particles, setParticles] = React.useState([])
+
+  useEffect(() => {
+    const list = []
+    for (let i = 0; i < 28; i++) {
+      list.push({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        top: `${30 + Math.random() * 65}%`,
+        duration: `${4 + Math.random() * 6}s`,
+        delay: `${Math.random() * 6}s`,
+        size: `${1 + Math.random() * 2}px`,
+        bg: Math.random() > 0.6 ? '#b060ff' : '#00b4ff'
+      })
+    }
+    setParticles(list)
+  }, [])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -110,49 +127,342 @@ export default function PublicHome() {
 
   return (
     <PublicLayout>
-      {/* ── HERO ── */}
+      {/* ── HERO (Cyber Industrial Design) ── */}
       <section className="pub-hero">
-        <div className="pub-hero-grid">
-          <div>
-            <div className="pub-hero-badge">
-              <span className="pub-hero-badge-dot" />
-              Rewinding &amp; Repair Specialists since 1972
+        <div className="pub-glow-orb blue"></div>
+        <div className="pub-glow-orb amber"></div>
+        <div className="pub-glow-orb cyan"></div>
+
+        {/* Floating particles */}
+        <div className="pub-particles">
+          {particles.map((p) => (
+            <div
+              key={p.id}
+              className="pub-particle"
+              style={{
+                left: p.left,
+                top: p.top,
+                animationDuration: p.duration,
+                animationDelay: p.delay,
+                width: p.size,
+                height: p.size,
+                backgroundColor: p.bg
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="pub-cyber-badge">Est. 1972 — High Voltage Specialists</div>
+
+        <div className="pub-cyber-headline">
+          <div className="company">REMAG<span>.</span>ELECTROS</div>
+          <div className="sub">Private Limited</div>
+        </div>
+
+        <p className="pub-cyber-tagline">
+          Precision <strong>refurbishment</strong> of high-voltage electrical equipment — restoring motors, transformers &amp; electromagnets to factory performance.
+        </p>
+
+        {/* MACHINES */}
+        <div className="pub-machines">
+          {/* ELECTRIC MOTOR */}
+          <div className="pub-motor-wrap">
+            <div className="pub-motor">
+              <svg viewBox="0 0 140 160" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <radialGradient id="mg1" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#1a3a5c"/>
+                    <stop offset="100%" stopColor="#0a1a2e"/>
+                  </radialGradient>
+                </defs>
+                {/* Housing body */}
+                <rect x="10" y="35" width="120" height="90" rx="8" fill="#0f1f38" stroke="#1a4070" strokeWidth="1.5"/>
+                {/* Housing fins */}
+                <rect x="10" y="40" width="120" height="6" rx="1" fill="#162d52" stroke="#1a4070" strokeWidth="0.5"/>
+                <rect x="10" y="52" width="120" height="6" rx="1" fill="#162d52" stroke="#1a4070" strokeWidth="0.5"/>
+                <rect x="10" y="64" width="120" height="6" rx="1" fill="#162d52" stroke="#1a4070" strokeWidth="0.5"/>
+                <rect x="10" y="76" width="120" height="6" rx="1" fill="#162d52" stroke="#1a4070" strokeWidth="0.5"/>
+                <rect x="10" y="88" width="120" height="6" rx="1" fill="#162d52" stroke="#1a4070" strokeWidth="0.5"/>
+                <rect x="10" y="100" width="120" height="6" rx="1" fill="#162d52" stroke="#1a4070" strokeWidth="0.5"/>
+                {/* End caps */}
+                <rect x="3" y="40" width="18" height="80" rx="4" fill="#0d1f3a" stroke="#1a4070" strokeWidth="1.2"/>
+                <rect x="119" y="40" width="18" height="80" rx="4" fill="#0d1f3a" stroke="#1a4070" strokeWidth="1.2"/>
+                {/* Shaft */}
+                <rect x="-2" y="76" width="22" height="8" rx="2" fill="#c0d4e8" stroke="#90b0cc" strokeWidth="0.8"/>
+                <rect x="120" y="76" width="22" height="8" rx="2" fill="#c0d4e8" stroke="#90b0cc" strokeWidth="0.8"/>
+                {/* Front face circle (rotor view) */}
+                <circle cx="70" cy="80" r="30" fill="url(#mg1)" stroke="#1a5090" strokeWidth="1.5"/>
+                {/* Rotor slots (spinning) */}
+                <g id="rotor-slots" style={{ transformOrigin: '70px 80px', animation: 'spin 3s linear infinite' }}>
+                  <line x1="70" y1="52" x2="70" y2="108" stroke="#00b4ff" strokeWidth="1" opacity="0.6"/>
+                  <line x1="44" y1="56" x2="96" y2="104" stroke="#00b4ff" strokeWidth="1" opacity="0.6"/>
+                  <line x1="44" y1="104" x2="96" y2="56" stroke="#00b4ff" strokeWidth="1" opacity="0.6"/>
+                  <line x1="42" y1="80" x2="98" y2="80" stroke="#00b4ff" strokeWidth="1" opacity="0.6"/>
+                  <line x1="52" y1="57" x2="88" y2="103" stroke="#1a90ff" strokeWidth="0.7" opacity="0.4"/>
+                  <line x1="88" y1="57" x2="52" y2="103" stroke="#1a90ff" strokeWidth="0.7" opacity="0.4"/>
+                </g>
+                {/* Center hub */}
+                <circle cx="70" cy="80" r="10" fill="#0a1428" stroke="#00b4ff" strokeWidth="1.5"/>
+                <circle cx="70" cy="80" r="4" fill="#00b4ff" opacity="0.6"/>
+                {/* Pulse ring */}
+                <circle cx="70" cy="80" r="22" fill="none" stroke="#00b4ff" strokeWidth="1" opacity="0">
+                  <animate attributeName="r" values="22;38" dur="2s" repeatCount="indefinite"/>
+                  <animate attributeName="opacity" values="0.8;0" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                {/* Terminal box */}
+                <rect x="48" y="20" width="44" height="18" rx="3" fill="#0f1f38" stroke="#1a5090" strokeWidth="1"/>
+                <rect x="55" y="24" width="8" height="10" rx="1" fill="#ff7700" stroke="#cc5500" strokeWidth="0.5"/>
+                <rect x="66" y="24" width="8" height="10" rx="1" fill="#cc0000" stroke="#880000" strokeWidth="0.5"/>
+                <rect x="77" y="24" width="8" height="10" rx="1" fill="#ff7700" stroke="#cc5500" strokeWidth="0.5"/>
+                {/* Wire lead */}
+                <line x1="59" y1="20" x2="59" y2="10" stroke="#ff7700" strokeWidth="1.5" strokeDasharray="3,2">
+                  <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite"/>
+                </line>
+                <line x1="70" y1="20" x2="70" y2="5" stroke="#cc0000" strokeWidth="1.5" strokeDasharray="3,2">
+                  <animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite"/>
+                </line>
+                <line x1="81" y1="20" x2="81" y2="10" stroke="#ff7700" strokeWidth="1.5" strokeDasharray="3,2">
+                  <animate attributeName="opacity" values="1;0.4;1" dur="1.8s" repeatCount="indefinite"/>
+                </line>
+                {/* Base feet */}
+                <rect x="20" y="125" width="20" height="8" rx="2" fill="#0d1a30" stroke="#1a4070" strokeWidth="0.8"/>
+                <rect x="100" y="125" width="20" height="8" rx="2" fill="#0d1a30" stroke="#1a4070" strokeWidth="0.8"/>
+                {/* Rating plate */}
+                <rect x="40" y="118" width="60" height="10" rx="2" fill="#0a1428" stroke="#1a5090" strokeWidth="0.5"/>
+                <text x="70" y="126" textAnchor="middle" fontFamily="monospace" fontSize="5" fill="#00b4ff" opacity="0.8">400V | 75kW | 3Φ</text>
+              </svg>
             </div>
-            <h1>
-              Professional<br />
-              <span className="highlight">Electrical Services</span><br />
-              for Industry
-            </h1>
-            <p className="pub-hero-desc">
-              Reliable rewinding and repair services for HT Motors, LT Motors, DC Motors,
-              Transformers, and Electromagnets. Precision workmanship, strict quality
-              standards, and advanced techniques ensuring optimal performance and long service life.
-            </p>
-            <div className="pub-hero-actions">
-              <Link to="/our-services" className="pub-btn pub-btn-primary">Explore Services →</Link>
-              <Link to="/contact-us" className="pub-btn pub-btn-outline">Get a Quote</Link>
-            </div>
-            <div className="pub-hero-stats-row">
-              {stats.map((s) => (
-                <div key={s.label} className="pub-hero-stat" style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                  <span className="pub-hero-stat-num">{s.num}</span>
-                  <span className="pub-hero-stat-lbl" style={{ marginTop: 0 }}>{s.label}</span>
-                </div>
-              ))}
-            </div>
+            <div className="pub-machine-label"><span>Electric Motor</span>HV Induction</div>
           </div>
-          <div className="pub-hero-visual">
-            <div className="pub-hero-orb">
-              <div className="pub-hero-orb-inner">
-                <img src="/logo.png" alt="RE Logo" style={{ width: '80px', height: '80px', objectFit: 'contain', marginBottom: '16px' }} />
-                <div className="pub-hero-orb-label">Remag Electros Pvt. Ltd.</div>
-                <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'center' }}>
-                  {['HT Motor', 'LT Motor', 'DC Motor', 'Transformer'].map((s) => (
-                    <span key={s} style={{ background: 'rgba(32,178,200,0.12)', border: '1px solid rgba(32,178,200,0.2)', borderRadius: 100, padding: '4px 14px', fontSize: 12, color: 'rgba(255,255,255,0.7)', letterSpacing: 1 }}>{s}</span>
-                  ))}
-                </div>
-              </div>
+
+          {/* POWER TRANSFORMER */}
+          <div className="pub-transformer-wrap">
+            <div className="pub-transformer">
+              <svg viewBox="0 0 160 190" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="tank-grad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#0d1f38"/>
+                    <stop offset="50%" stopColor="#162d52"/>
+                    <stop offset="100%" stopColor="#0d1f38"/>
+                  </linearGradient>
+                </defs>
+                {/* Main tank body */}
+                <rect x="20" y="55" width="120" height="110" rx="4" fill="url(#tank-grad)" stroke="#1a4070" strokeWidth="1.5"/>
+                {/* Tank side ribs/radiators left */}
+                <rect x="8" y="65" width="14" height="14" rx="1" fill="#0a1828" stroke="#1a4070" strokeWidth="0.8"/>
+                <rect x="8" y="83" width="14" height="14" rx="1" fill="#0a1828" stroke="#1a4070" strokeWidth="0.8"/>
+                <rect x="8" y="101" width="14" height="14" rx="1" fill="#0a1828" stroke="#1a4070" strokeWidth="0.8"/>
+                <rect x="8" y="119" width="14" height="14" rx="1" fill="#0a1828" stroke="#1a4070" strokeWidth="0.8"/>
+                <rect x="8" y="137" width="14" height="14" rx="1" fill="#0a1828" stroke="#1a4070" strokeWidth="0.8"/>
+                {/* Rib connectors left */}
+                <line x1="8" y1="70" x2="20" y2="70" stroke="#1a4070" strokeWidth="0.8"/>
+                <line x1="8" y1="77" x2="20" y2="77" stroke="#1a4070" strokeWidth="0.8"/>
+                <line x1="8" y1="90" x2="20" y2="90" stroke="#1a4070" strokeWidth="0.8"/>
+                {/* Tank side ribs right */}
+                <rect x="138" y="65" width="14" height="14" rx="1" fill="#0a1828" stroke="#1a4070" strokeWidth="0.8"/>
+                <rect x="138" y="83" width="14" height="14" rx="1" fill="#0a1828" stroke="#1a4070" strokeWidth="0.8"/>
+                <rect x="138" y="101" width="14" height="14" rx="1" fill="#0a1828" stroke="#1a4070" strokeWidth="0.8"/>
+                <rect x="138" y="119" width="14" height="14" rx="1" fill="#0a1828" stroke="#1a4070" strokeWidth="0.8"/>
+                <rect x="138" y="137" width="14" height="14" rx="1" fill="#0a1828" stroke="#1a4070" strokeWidth="0.8"/>
+
+                {/* HV Bushings */}
+                <rect x="42" y="18" width="12" height="40" rx="3" fill="#1a3a60" stroke="#00b4ff" strokeWidth="1"/>
+                <rect x="38" y="22" width="20" height="4" rx="1" fill="#1a4a70" stroke="#00b4ff" strokeWidth="0.8"/>
+                <rect x="39" y="30" width="18" height="3" rx="1" fill="#1a4a70" stroke="#00b4ff" strokeWidth="0.8"/>
+                <rect x="40" y="38" width="16" height="3" rx="1" fill="#1a4a70" stroke="#00b4ff" strokeWidth="0.8"/>
+                <line x1="48" y1="12" x2="48" y2="18" stroke="#00b4ff" strokeWidth="2">
+                  <animate attributeName="opacity" values="1;0.2;1" dur="1.2s" repeatCount="indefinite"/>
+                </line>
+
+                <rect x="74" y="18" width="12" height="40" rx="3" fill="#1a3a60" stroke="#00b4ff" strokeWidth="1"/>
+                <rect x="70" y="22" width="20" height="4" rx="1" fill="#1a4a70" stroke="#00b4ff" strokeWidth="0.8"/>
+                <rect x="71" y="30" width="18" height="3" rx="1" fill="#1a4a70" stroke="#00b4ff" strokeWidth="0.8"/>
+                <rect x="72" y="38" width="16" height="3" rx="1" fill="#1a4a70" stroke="#00b4ff" strokeWidth="0.8"/>
+                <line x1="80" y1="8" x2="80" y2="18" stroke="#00b4ff" strokeWidth="2">
+                  <animate attributeName="opacity" values="0.4;1;0.4" dur="1.2s" repeatCount="indefinite"/>
+                </line>
+
+                <rect x="106" y="18" width="12" height="40" rx="3" fill="#1a3a60" stroke="#00b4ff" strokeWidth="1"/>
+                <rect x="102" y="22" width="20" height="4" rx="1" fill="#1a4a70" stroke="#00b4ff" strokeWidth="0.8"/>
+                <rect x="103" y="30" width="18" height="3" rx="1" fill="#1a4a70" stroke="#00b4ff" strokeWidth="0.8"/>
+                <rect x="104" y="38" width="16" height="3" rx="1" fill="#1a4a70" stroke="#00b4ff" strokeWidth="0.8"/>
+                <line x1="112" y1="12" x2="112" y2="18" stroke="#00b4ff" strokeWidth="2">
+                  <animate attributeName="opacity" values="0.7;0.1;0.7" dur="1.4s" repeatCount="indefinite"/>
+                </line>
+
+                <path d="M48 12 Q64 2 80 8" fill="none" stroke="#00d4ff" strokeWidth="0.8" strokeDasharray="3,2" opacity="0">
+                  <animate attributeName="opacity" values="0;1;0;0;0" dur="4s" repeatCount="indefinite"/>
+                </path>
+                <path d="M80 8 Q96 1 112 12" fill="none" stroke="#00d4ff" strokeWidth="0.8" strokeDasharray="3,2" opacity="0">
+                  <animate attributeName="opacity" values="0;0;0;1;0" dur="4s" repeatCount="indefinite"/>
+                </path>
+
+                {/* Conservator tank */}
+                <rect x="50" y="50" width="60" height="14" rx="3" fill="#0f1f38" stroke="#1a5090" strokeWidth="1"/>
+                <text x="80" y="60" textAnchor="middle" fontFamily="monospace" fontSize="5" fill="#00b4ff" opacity="0.7">OIL LEVEL</text>
+
+                {/* Core section */}
+                <rect x="32" y="68" width="96" height="85" rx="2" fill="#0a1626" stroke="#1a3a60" strokeWidth="0.8"/>
+                <rect x="38" y="72" width="20" height="77" rx="1" fill="#1a3050" stroke="#00b4ff" strokeWidth="0.5" opacity="0.7"/>
+                <rect x="70" y="72" width="20" height="77" rx="1" fill="#1a3050" stroke="#00b4ff" strokeWidth="0.5" opacity="0.7"/>
+                <rect x="102" y="72" width="20" height="77" rx="1" fill="#1a3050" stroke="#00b4ff" strokeWidth="0.5" opacity="0.7"/>
+
+                <rect x="33" y="85" width="30" height="50" rx="2" fill="none" stroke="#ff8800" strokeWidth="1.5">
+                  <animate attributeName="stroke" values="#ff8800;#ffaa00;#ff8800" dur="2s" repeatCount="indefinite"/>
+                </rect>
+                <rect x="36" y="90" width="24" height="40" rx="1" fill="none" stroke="#00c8ff" strokeWidth="1">
+                  <animate attributeName="stroke" values="#00c8ff;#80e8ff;#00c8ff" dur="2s" repeatCount="indefinite" begin="1s"/>
+                </rect>
+
+                <rect x="65" y="85" width="30" height="50" rx="2" fill="none" stroke="#ff8800" strokeWidth="1.5">
+                  <animate attributeName="stroke" values="#ff8800;#ffaa00;#ff8800" dur="2s" repeatCount="indefinite" begin="0.3s"/>
+                </rect>
+                <rect x="68" y="90" width="24" height="40" rx="1" fill="none" stroke="#00c8ff" strokeWidth="1">
+                  <animate attributeName="stroke" values="#00c8ff;#80e8ff;#00c8ff" dur="2s" repeatCount="indefinite" begin="1.3s"/>
+                </rect>
+
+                <rect x="97" y="85" width="30" height="50" rx="2" fill="none" stroke="#ff8800" strokeWidth="1.5">
+                  <animate attributeName="stroke" values="#ff8800;#ffaa00;#ff8800" dur="2s" repeatCount="indefinite" begin="0.6s"/>
+                </rect>
+                <rect x="100" y="90" width="24" height="40" rx="1" fill="none" stroke="#00c8ff" strokeWidth="1">
+                  <animate attributeName="stroke" values="#00c8ff;#80e8ff;#00c8ff" dur="2s" repeatCount="indefinite" begin="1.6s"/>
+                </rect>
+
+                {/* Rating plate */}
+                <rect x="40" y="160" width="80" height="14" rx="2" fill="#0a1428" stroke="#1a5090" strokeWidth="0.5"/>
+                <text x="80" y="170" text-anchor="middle" fontFamily="monospace" fontSize="5.5" fill="#00b4ff" opacity="0.9">11kV/433V | 500kVA</text>
+
+                {/* Base wheels */}
+                <rect x="25" y="165" width="110" height="8" rx="2" fill="#0a1428" stroke="#1a4070" strokeWidth="0.8"/>
+                <circle cx="45" cy="178" r="6" fill="#0a1428" stroke="#1a5090" strokeWidth="1"/>
+                <circle cx="115" cy="178" r="6" fill="#0a1428" stroke="#1a5090" strokeWidth="1"/>
+                <circle cx="45" cy="178" r="2" fill="#00b4ff" opacity="0.5"/>
+                <circle cx="115" cy="178" r="2" fill="#00b4ff" opacity="0.5"/>
+              </svg>
             </div>
+            <div className="pub-machine-label"><span>Power Transformer</span>11kV Distribution</div>
+          </div>
+
+          {/* ELECTROMAGNET */}
+          <div className="pub-magnet-wrap">
+            <div className="pub-magnet">
+              <svg viewBox="0 0 130 155" xmlns="http://www.w3.org/2000/svg">
+                {/* U-shape core */}
+                <rect x="15" y="30" width="32" height="90" rx="8" fill="#0f1a2e" stroke="#6a30a0" strokeWidth="1.5"/>
+                <rect x="83" y="30" width="32" height="90" rx="8" fill="#0f1a2e" stroke="#6a30a0" strokeWidth="1.5"/>
+                <rect x="15" y="30" width="100" height="32" rx="8" fill="#0f1a2e" stroke="#6a30a0" strokeWidth="1.5"/>
+                <rect x="22" y="36" width="20" height="20" rx="2" fill="#1a0838" stroke="#8840cc" strokeWidth="0.5"/>
+                <rect x="88" y="36" width="20" height="20" rx="2" fill="#1a0838" stroke="#8840cc" strokeWidth="0.5"/>
+                <rect x="22" y="36" width="86" height="20" rx="2" fill="#1a0838" stroke="#8840cc" strokeWidth="0.5"/>
+
+                {/* Coil windings left */}
+                <rect x="13" y="45" width="36" height="5" rx="1" fill="none" stroke="#b060ff" strokeWidth="1.5">
+                  <animate attributeName="stroke" values="#b060ff;#e0a0ff;#b060ff" dur="1.5s" repeatCount="indefinite"/>
+                </rect>
+                <rect x="13" y="53" width="36" height="5" rx="1" fill="none" stroke="#9040ee" strokeWidth="1.5">
+                  <animate attributeName="stroke" values="#9040ee;#c070ff;#9040ee" dur="1.5s" repeatCount="indefinite" begin="0.2s"/>
+                </rect>
+                <rect x="13" y="61" width="36" height="5" rx="1" fill="none" stroke="#b060ff" strokeWidth="1.5">
+                  <animate attributeName="stroke" values="#b060ff;#e0a0ff;#b060ff" dur="1.5s" repeatCount="indefinite" begin="0.4s"/>
+                </rect>
+                <rect x="13" y="69" width="36" height="5" rx="1" fill="none" stroke="#9040ee" strokeWidth="1.5">
+                  <animate attributeName="stroke" values="#9040ee;#c070ff;#9040ee" dur="1.5s" repeatCount="indefinite" begin="0.6s"/>
+                </rect>
+                <rect x="13" y="77" width="36" height="5" rx="1" fill="none" stroke="#b060ff" strokeWidth="1.5">
+                  <animate attributeName="stroke" values="#b060ff;#e0a0ff;#b060ff" dur="1.5s" repeatCount="indefinite" begin="0.8s"/>
+                </rect>
+                <rect x="13" y="85" width="36" height="5" rx="1" fill="none" stroke="#9040ee" strokeWidth="1.5">
+                  <animate attributeName="stroke" values="#9040ee;#c070ff;#9040ee" dur="1.5s" repeatCount="indefinite" begin="1s"/>
+                </rect>
+                <rect x="13" y="93" width="36" height="5" rx="1" fill="none" stroke="#b060ff" strokeWidth="1.5">
+                  <animate attributeName="stroke" values="#b060ff;#e0a0ff;#b060ff" dur="1.5s" repeatCount="indefinite" begin="1.2s"/>
+                </rect>
+
+                {/* Coil windings right */}
+                <rect x="81" y="45" width="36" height="5" rx="1" fill="none" stroke="#b060ff" strokeWidth="1.5">
+                  <animate attributeName="stroke" values="#b060ff;#e0a0ff;#b060ff" dur="1.5s" repeatCount="indefinite" begin="0.1s"/>
+                </rect>
+                <rect x="81" y="53" width="36" height="5" rx="1" fill="none" stroke="#9040ee" strokeWidth="1.5">
+                  <animate attributeName="stroke" values="#9040ee;#c070ff;#9040ee" dur="1.5s" repeatCount="indefinite" begin="0.3s"/>
+                </rect>
+                <rect x="81" y="61" width="36" height="5" rx="1" fill="none" stroke="#b060ff" strokeWidth="1.5">
+                  <animate attributeName="stroke" values="#b060ff;#e0a0ff;#b060ff" dur="1.5s" repeatCount="indefinite" begin="0.5s"/>
+                </rect>
+                <rect x="81" y="69" width="36" height="5" rx="1" fill="none" stroke="#9040ee" strokeWidth="1.5">
+                  <animate attributeName="stroke" values="#9040ee;#c070ff;#9040ee" dur="1.5s" repeatCount="indefinite" begin="0.7s"/>
+                </rect>
+                <rect x="81" y="77" width="36" height="5" rx="1" fill="none" stroke="#b060ff" strokeWidth="1.5">
+                  <animate attributeName="stroke" values="#b060ff;#e0a0ff;#b060ff" dur="1.5s" repeatCount="indefinite" begin="0.9s"/>
+                </rect>
+                <rect x="81" y="85" width="36" height="5" rx="1" fill="none" stroke="#9040ee" strokeWidth="1.5">
+                  <animate attributeName="stroke" values="#9040ee;#c070ff;#9040ee" dur="1.5s" repeatCount="indefinite" begin="1.1s"/>
+                </rect>
+                <rect x="81" y="93" width="36" height="5" rx="1" fill="none" stroke="#b060ff" strokeWidth="1.5">
+                  <animate attributeName="stroke" values="#b060ff;#e0a0ff;#b060ff" dur="1.5s" repeatCount="indefinite" begin="1.3s"/>
+                </rect>
+
+                {/* Pole faces */}
+                <rect x="13" y="118" width="36" height="12" rx="3" fill="#2a0848" stroke="#b060ff" strokeWidth="1.5"/>
+                <text x="31" y="128" text-anchor="middle" fontFamily="monospace" fontSize="7" fontWeight="bold" fill="#e0a0ff">N</text>
+                <rect x="81" y="118" width="36" height="12" rx="3" fill="#2a0848" stroke="#b060ff" strokeWidth="1.5"/>
+                <text x="99" y="128" text-anchor="middle" fontFamily="monospace" fontSize="7" fontWeight="bold" fill="#e0a0ff">S</text>
+
+                {/* Magnetic field lines */}
+                <path d="M31 130 Q65 148 99 130" fill="none" stroke="#b060ff" strokeWidth="1" strokeDasharray="4,3" opacity="0">
+                  <animate attributeName="opacity" values="0;0.7;0" dur="2s" repeatCount="indefinite"/>
+                  <animate attributeName="d" values="M31 130 Q65 148 99 130;M31 130 Q65 155 99 130;M31 130 Q65 148 99 130" dur="2s" repeatCount="indefinite"/>
+                </path>
+                <path d="M31 130 Q65 140 99 130" fill="none" stroke="#d080ff" strokeWidth="0.8" strokeDasharray="3,3" opacity="0">
+                  <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
+                </path>
+                <path d="M31 130 Q65 160 99 130" fill="none" stroke="#8030cc" strokeWidth="0.7" strokeDasharray="5,4" opacity="0">
+                  <animate attributeName="opacity" values="0;0.5;0" dur="2.5s" repeatCount="indefinite" begin="0.5s"/>
+                </path>
+
+                {/* Power leads */}
+                <line x1="31" y1="30" x2="31" y2="14" stroke="#ff8800" strokeWidth="2">
+                  <animate attributeName="opacity" values="1;0.3;1" dur="1.2s" repeatCount="indefinite"/>
+                </line>
+                <line x1="99" y1="30" x2="99" y2="14" stroke="#cc3300" strokeWidth="2">
+                  <animate attributeName="opacity" values="0.3;1;0.3" dur="1.2s" repeatCount="indefinite"/>
+                </line>
+                {/* Terminal markers */}
+                <circle cx="31" cy="12" r="4" fill="#ff8800" opacity="0.8"/>
+                <circle cx="99" cy="12" r="4" fill="#cc3300" opacity="0.8"/>
+                <text x="31" y="8" text-anchor="middle" fontFamily="monospace" fontSize="6" fill="#ff8800">+</text>
+                <text x="99" y="8" text-anchor="middle" fontFamily="monospace" fontSize="6" fill="#cc3300">–</text>
+              </svg>
+            </div>
+            <div className="pub-machine-label"><span>Electromagnet</span>Industrial Grade</div>
+          </div>
+        </div>
+
+        {/* CTA BUTTONS */}
+        <div className="pub-cta-row">
+          <Link to="/contact-us" className="pub-btn-cyber">Get a Quote ↗</Link>
+          <Link to="/our-services" className="pub-btn-outline-cyber">View Services</Link>
+        </div>
+
+        {/* STATS */}
+        <div className="pub-cyber-stats">
+          <div className="pub-cyber-stat">
+            <div className="num">500<span>+</span></div>
+            <div className="lbl">Units Refurbished</div>
+          </div>
+          <div className="pub-cyber-stat-divider"></div>
+          <div className="pub-cyber-stat">
+            <div className="num">11<span>kV</span></div>
+            <div className="lbl">Max HV Rating</div>
+          </div>
+          <div className="pub-cyber-stat-divider"></div>
+          <div className="pub-cyber-stat">
+            <div className="num">99<span>%</span></div>
+            <div className="lbl">Uptime Guarantee</div>
+          </div>
+          <div className="pub-cyber-stat-divider"></div>
+          <div className="pub-cyber-stat">
+            <div className="num">24<span>/7</span></div>
+            <div className="lbl">Support</div>
           </div>
         </div>
       </section>
