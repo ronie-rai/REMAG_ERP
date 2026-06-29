@@ -73,10 +73,8 @@ export default function PublicLayout({ children }) {
       {/* Sticky Navbar */}
       <nav className="pub-nav" style={{ position: 'sticky' }}>
         <div className="pub-nav-inner">
-          <Link to="/" className="pub-logo">
-            <div className="pub-logo-badge">
-              <span className="pub-logo-text-re">RE</span>
-            </div>
+          <Link to="/" className="pub-logo" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
+            <img src="/logo.png" alt="RE Logo" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
             <div className="pub-logo-text-box">
               <span className="pub-logo-name">Remag Electros</span>
               <span className="pub-logo-tagline">Dependable Rewinders</span>
@@ -125,10 +123,8 @@ export default function PublicLayout({ children }) {
         <div className="pub-footer-grid">
           {/* Brand Column */}
           <div>
-            <Link to="/" className="pub-logo" style={{ marginBottom: 16, display: 'inline-flex' }}>
-              <div className="pub-logo-badge">
-                <span className="pub-logo-text-re">RE</span>
-              </div>
+            <Link to="/" className="pub-logo" style={{ marginBottom: 16, display: 'inline-flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
+              <img src="/logo.png" alt="RE Logo" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
               <div className="pub-logo-text-box">
                 <span className="pub-logo-name">Remag Electros</span>
                 <span className="pub-logo-tagline">Pvt. Ltd.</span>

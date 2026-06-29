@@ -134,9 +134,9 @@ export default function PublicHome() {
             </div>
             <div className="pub-hero-stats-row">
               {stats.map((s) => (
-                <div key={s.label} className="pub-hero-stat">
-                  <div className="pub-hero-stat-num">{s.num}</div>
-                  <div className="pub-hero-stat-lbl">{s.label}</div>
+                <div key={s.label} className="pub-hero-stat" style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                  <span className="pub-hero-stat-num">{s.num}</span>
+                  <span className="pub-hero-stat-lbl" style={{ marginTop: 0 }}>{s.label}</span>
                 </div>
               ))}
             </div>
@@ -144,7 +144,7 @@ export default function PublicHome() {
           <div className="pub-hero-visual">
             <div className="pub-hero-orb">
               <div className="pub-hero-orb-inner">
-                <div className="pub-hero-orb-re">RE</div>
+                <img src="/logo.png" alt="RE Logo" style={{ width: '80px', height: '80px', objectFit: 'contain', marginBottom: '16px' }} />
                 <div className="pub-hero-orb-label">Remag Electros Pvt. Ltd.</div>
                 <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'center' }}>
                   {['HT Motor', 'LT Motor', 'DC Motor', 'Transformer'].map((s) => (
@@ -302,8 +302,10 @@ export default function PublicHome() {
         <div className="pub-stats-grid">
           {stats.map((s) => (
             <div key={s.label} className="pub-stat-item">
-              <div className="pub-stat-num">{s.num}</div>
-              <div className="pub-stat-label">{s.label}</div>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: '8px' }}>
+                <span className="pub-stat-num">{s.num}</span>
+                <span className="pub-stat-label" style={{ marginTop: 0 }}>{s.label}</span>
+              </div>
               <div className="pub-stat-sub">{s.sub}</div>
             </div>
           ))}

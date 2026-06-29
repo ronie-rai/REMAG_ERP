@@ -303,9 +303,10 @@ function Layout({ children }) {
 
   const drawer = (
     <Box>
-      <Toolbar>
-        <Typography variant="h6" noWrap component="div">
-          ERP System
+      <Toolbar sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
+        <img src="/logo.png" alt="RE Logo" style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
+        <Typography variant="subtitle1" sx={{ fontWeight: 'bold', letterSpacing: 0.5, color: 'text.primary' }} noWrap>
+          REMAG ERP
         </Typography>
       </Toolbar>
       <List>
